@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -27,6 +28,11 @@ public class AccountController {
     TextField newpass;
     @FXML
     TextField cityname;
+    @FXML
+    Label errorMessageLabel;
+
+    @FXML
+    Label cityErrorMessageLabel;
 
 
 
@@ -67,13 +73,6 @@ public class AccountController {
 
     }
 
-    public void changeSecurityAnswer(){
-        String newAnswer = cityname.getText();
-
-        //TODO Change the Answer in File
-
-    }
-
 
     public void changePass() throws FileNotFoundException {
         //read from file the new pass
@@ -88,8 +87,26 @@ public class AccountController {
             System.out.println("Change password");
         }
         else{
+            errorMessageLabel.setText("Invalid Please try again!");
             System.out.println("Password is not Correct");
         }
+
+
+    }
+
+
+    public void changeSecurityAnswer(){
+        String newAnswer = cityname.getText();
+        if (cityname.getText().isEmpty()){
+            cityErrorMessageLabel.setText("Invalid Please Fill City Name");
+        }
+        else{
+            cityErrorMessageLabel.setText("");
+            //TODO Change the Answer in File
+
+        }
+
+
 
 
     }

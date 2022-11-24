@@ -12,10 +12,10 @@
     <children>
         <Pane fx:id="OriginalPane" prefHeight="768.0" prefWidth="1024.0">
             <children>
-                <Button fx:id="addButton" layoutX="430.0" layoutY="672.0" mnemonicParsing="false" onAction="#CreateClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Add Course" />
-                <Button fx:id="logoutButton" layoutX="18.0" layoutY="731.0" mnemonicParsing="false" onAction="#logoutButton" text="Logout" />
-                <Button fx:id="delButton" layoutX="578.0" layoutY="672.0" mnemonicParsing="false" onAction="#DeleteClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Delete Course" />
-                <Button fx:id="modButton" layoutX="284.0" layoutY="672.0" mnemonicParsing="false" onAction="#RenameClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Modify Course" />
+                <Button fx:id="addButton" layoutX="430.0" layoutY="672.0" mnemonicParsing="false" onAction="#CreateClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Add Course" textFill="#2c7c01" />
+                <Button fx:id="logoutButton" layoutX="18.0" layoutY="731.0" mnemonicParsing="false" onAction="#logoutButton" text="Logout" textFill="#8d0000" />
+                <Button fx:id="delButton" layoutX="578.0" layoutY="672.0" mnemonicParsing="false" onAction="#DeleteClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Delete Course" textFill="#b90000" />
+                <Button fx:id="modButton" layoutX="284.0" layoutY="672.0" mnemonicParsing="false" onAction="#RenameClick" prefHeight="53.0" prefWidth="139.0" snapToPixel="false" text="Modify Course" textFill="#005180" />
                 <TabPane fx:id="tabCourses" layoutX="15.0" layoutY="10.0" prefHeight="633.0" prefWidth="995.0" tabClosingPolicy="UNAVAILABLE" />
                 <TextField fx:id="renameText" layoutX="284.0" layoutY="639.0" prefHeight="25.0" prefWidth="139.0" visible="false" />
                 <Label fx:id="renameLabelText" layoutX="152.0" layoutY="643.0" text="Enter new course name:" visible="false" />
@@ -26,7 +26,7 @@
                   <Font size="34.0" />
                </font>
             </Button>
-            <Button fx:id="accountSettings" layoutX="78.0" layoutY="731.0" mnemonicParsing="false" onAction="#accountSettingsClick" text="Account Settings" />
+            <Button fx:id="accountSettings" layoutX="88.0" layoutY="731.0" mnemonicParsing="false" onAction="#accountSettingsClick" prefHeight="25.0" prefWidth="130.0" text="Account Settings" />
             </children>
         </Pane>
     </children>
