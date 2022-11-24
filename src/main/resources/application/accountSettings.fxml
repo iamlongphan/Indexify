@@ -33,7 +33,7 @@
       <PasswordField fx:id="newpass" layoutX="132.0" layoutY="212.0" promptText="New password" />
       <TextField fx:id="cityname" layoutX="373.0" layoutY="200.0" prefHeight="25.0" prefWidth="169.0" promptText="City name" />
       <Button fx:id="confirmPasswordB" layoutX="101.0" layoutY="270.0" mnemonicParsing="false" onAction="#changePass" text="Confirm password" />
-      <Button fx:id="confirmSecurityB" layoutX="377.0" layoutY="270.0" mnemonicParsing="false" text="Confirm Security Question" />
+      <Button fx:id="confirmSecurityB" layoutX="377.0" layoutY="270.0" mnemonicParsing="false" onAction="#changeSecurityAnswer" text="Confirm Security Question" />
       <Line endX="-4.0" endY="211.0" fill="#d6020252" layoutX="337.0" layoutY="119.0" startX="-4.0" startY="-27.0" stroke="#0000007b" />
       <Button fx:id="cancelB" layoutX="411.0" layoutY="352.0" mnemonicParsing="false" onAction="#cancelButton" text="Cancel" />
    </children>
