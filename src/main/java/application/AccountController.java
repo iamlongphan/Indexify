@@ -8,10 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 public class AccountController {
 
@@ -32,6 +30,8 @@ public class AccountController {
 
 
 
+
+
     @FXML
     public void cancelButton() {
         try {
@@ -46,6 +46,59 @@ public class AccountController {
         }
 
     }
+
+    public boolean validatespass(String oldpassw) throws FileNotFoundException {
+        File database = new File("users.TXT");
+        Scanner readDatabase = new Scanner(database);
+
+        while(readDatabase.hasNextLine())
+        {
+            String[] details = readDatabase.nextLine().split(",");
+            String realOldPass = details[1];
+            if (realOldPass.equals(oldpassw))
+            {
+                readDatabase.close();
+                return true;
+            }
+
+        }
+        readDatabase.close();
+        return false;
+
+    }
+
+    public void changeSecurityAnswer(){
+        String newAnswer = cityname.getText();
+
+        //TODO Change the Answer in File
+
+    }
+
+
+    public void changePass() throws FileNotFoundException {
+        //read from file the new pass
+        String oldPassword = oldpass.getText();
+        String newPassword = newpass.getText();
+
+        if (validatespass(oldPassword) ){
+
+
+            //TODO replace the old password with the new one
+
+            System.out.println("Change password");
+        }
+        else{
+            System.out.println("Password is not Correct");
+        }
+
+
+    }
+
+
+    public void deleteAccount(){
+        //TODO Delete account form File
+    }
+
 
 
 }
