@@ -109,6 +109,7 @@ public class CourseController {
 
     }
 
+
     @FXML
     public void initialize() throws IOException
     {
@@ -123,6 +124,10 @@ public class CourseController {
             while ((line = courseReader.readLine()) != null) {
                 Tab tab1 = new Tab();
                 tab1.setText(line);
+                Button B = new Button();
+                B.setText("Open Course Set");
+                B.setOnAction(openCourseSetB.getOnAction());
+                tab1.setContent(B);
                 tabCourses.getTabs().add(tab1);
             }
             courseReader.close();

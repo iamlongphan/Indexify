@@ -17,6 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -183,5 +184,8 @@ public class IndexCardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         set = new Set("course", text, checkBox, counterBox);
+        File setFile = new File("currentUser.txt");
+
     }
 }
+
