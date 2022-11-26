@@ -249,6 +249,7 @@ public class IndexCardController implements Initializable {
 
 
     }
+    //NEED TO EDIT REMOVELINE FROM FILE TO CHANGE THE COURSES FILE.
     public void removeLineFromFile(String courseToRemove) {
 
         try {
