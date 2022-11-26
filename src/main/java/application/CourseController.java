@@ -338,7 +338,7 @@ public class CourseController {
     @FXML
     public void openCourseSet(ActionEvent event) throws Exception {
         try {
-            //TestCode
+
             String fileName = "userData/"+currentUserName+"/"+currentUserName+tabCourses.getSelectionModel().getSelectedItem().getText()+".txt";
             String courseFileName = tabCourses.getSelectionModel().getSelectedItem().getText();
 
@@ -349,7 +349,7 @@ public class CourseController {
             courseWriter.write(courseFileName);
             courseWriter.close();
 
-            //TestCode
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("indexCardViewer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();

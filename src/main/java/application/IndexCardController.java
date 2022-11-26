@@ -85,7 +85,25 @@ public class IndexCardController implements Initializable {
         submit.setOnAction((actionEvent) -> {
             if(!(termField.getText().isEmpty() || definitionField.getText().isEmpty())){
                 //boolean selected = !checkBox.isSelected();
+                removeLineFromFile(set.getCard().getFront());
                 set.updateCard(termField.getText(), definitionField.getText(), checkBox.isSelected());
+
+                File currentCourseFile = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
+                BufferedWriter currentCourseWriter = null;
+                try {
+                   currentCourseWriter = new BufferedWriter(new FileWriter(currentCourseFile,true));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                currentCheck = checkBox.isSelected();
+                try {
+                    currentCourseWriter.write(termField.getText()+","+definitionField.getText()+","+currentCheck.toString()+",");
+                    System.out.println(termField.getText()+","+definitionField.getText()+","+currentCheck.toString()+",");
+                    currentCourseWriter.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
                 stage.close();
             }
         });
@@ -133,7 +151,6 @@ public class IndexCardController implements Initializable {
         submit.setOnAction((actionEvent) -> {
             if(!(termField.getText().isEmpty() || definitionField.getText().isEmpty())){
                 set.addCard(termField.getText(), definitionField.getText(), false);
-                //This is where to write data down to the file TODO TESTING PHASE
                 File courseRead = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
                 try {
                     BufferedWriter courseFileWriter = new BufferedWriter(new FileWriter(courseRead,true));
