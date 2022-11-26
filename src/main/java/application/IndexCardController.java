@@ -56,6 +56,9 @@ public class IndexCardController implements Initializable {
     @FXML
     TextField counterBox;
 
+    @FXML
+    Button reviewLearnedB;
+
     Set set;
 
     String currentUser;
@@ -365,6 +368,21 @@ public class IndexCardController implements Initializable {
         }
         catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+    public void reviewLearned() throws FileNotFoundException {
+        File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
+        Scanner courseReader = new Scanner(currentCourseFile);
+        set = new Set(currentCourse, text, checkBox, counterBox);
+        while(courseReader.hasNextLine())
+        {
+            String[] readTheLine = courseReader.nextLine().split(",");
+            Boolean checker = Boolean.parseBoolean(readTheLine[2]);
+            if(readTheLine[2].equals("true"))
+            {
+                set.addCard(readTheLine[0],readTheLine[1], checker);
+            }
+
         }
     }
 }

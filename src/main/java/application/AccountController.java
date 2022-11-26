@@ -292,11 +292,6 @@ public class AccountController {
             }
         }
 
-        if (file.delete()) {
-            System.out.printf("Delete : %s%n", file);
-        } else {
-            System.err.printf("Unable to delete file or directory : %s%n", file);
-        }
 
 
     }
