@@ -255,7 +255,7 @@ public class IndexCardController implements Initializable {
 
             File userReader = new File("currentUser.txt");
             Scanner readUser = new Scanner(userReader);
-            String currentUser = readUser.nextLine();
+            currentUser = readUser.nextLine();
             readUser.close();
 
 
