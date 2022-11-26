@@ -349,8 +349,6 @@ public class CourseController {
             courseWriter.write(courseFileName);
             courseWriter.close();
 
-            FileWriter abbada = new FileWriter(opencurrentCourse);
-            abbada.close();
             //TestCode
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("indexCardViewer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();

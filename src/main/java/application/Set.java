@@ -71,6 +71,7 @@ public class Set {
             return;
         }
         IndexCard currentCard = set.get(index);
+
         if(currentCard.isFlipped()){
             flipCurrentCard();
         }
@@ -102,7 +103,7 @@ public class Set {
     }
 
     public IndexCard getCard(){
-        return set.get(index);
+            return set.get(index);
     }
 
     public void addCard(String term, String definition, boolean selected) {
@@ -116,7 +117,15 @@ public class Set {
             return;
         }
         set.remove(card);
-        card = set.get(index);
+        if(index == set.size())
+        {
+            index-=1;
+            card = set.get(index);
+        }
+        else
+        {
+            card = set.get(index);
+        }
         updateCard(card.getFront(), card.getBack(), card.isLearned());
         counterBox.setText((index + 1) + "/" + size());
     }
