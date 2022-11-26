@@ -2,6 +2,7 @@ package application;
 
 
 import com.sun.org.apache.xerces.internal.xs.StringList;
+import edu.sjsu.yazdankhah.crypto.util.PassUtil;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -91,8 +92,6 @@ public class LoginController {
      * @throws FileNotFoundException
      */
 
-
-
     public void loginButtonAction(ActionEvent event) throws IOException {
         File file1 = new File("currentUser.txt");
         if (usernameTextField.getText().isEmpty() || enterPasswordField.getText().isEmpty()) {
@@ -104,13 +103,10 @@ public class LoginController {
                 Stage stage = (Stage) loginButton.getScene().getWindow();
                 usernameSaved = usernameTextField.getText();
                 setCurrentUser(usernameSaved);
-                System.out.println(saveCurrentUser + "From LoginButton");
                 passwordSaved = enterPasswordField.getText();
-                System.out.println(passwordSaved + "from LoginButtonAction");
                 buff1.write(saveCurrentUser);
                 buff1.close();
                 loginSuccess(event);
-                System.out.println(saveCurrentUser + "From LoginButton2");
                 stage.close();
             }
             else {
@@ -165,17 +161,16 @@ public class LoginController {
             String[] details = readDatabase.nextLine().split(",");
             usernameSaved = details[0];
             passwordSaved = details[1];
-            System.out.println(usernameSaved + " from validateLogin");
-            System.out.println(passwordSaved);
+            PassUtil passUtil = new PassUtil();
+            passwordSaved = passUtil.decrypt(passwordSaved);
+
             if(username.equals(usernameSaved) && password.equals(passwordSaved))
             {
-                System.out.println("Statement working as intended");
                 readDatabase.close();
                 return true;
             }
         }
         readDatabase.close();
-        System.out.println("final false return");
         return false;
     }
 
@@ -192,13 +187,11 @@ public class LoginController {
             usernameSaved = details[0];
             if (usernameSaved.equals(username))
             {
-                System.out.println("Username already exists");
                 readDatabase.close();
                 return false;
             }
         }
         readDatabase.close();
-        System.out.println("User not found");
         return true;
     }
 
@@ -254,6 +247,8 @@ public class LoginController {
             public void handle(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = passwordField.getText();
+                PassUtil passUtil = new PassUtil();
+                password = passUtil.encrypt(password);
                 String qAns = question.getText();
                 try {
 
@@ -276,7 +271,7 @@ public class LoginController {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                System.out.println(username + " " + password + " " + qAns);
+
 
 
 

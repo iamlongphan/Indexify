@@ -392,6 +392,7 @@ public class IndexCardController implements Initializable {
             }
 
         }
+        courseReader.close();
         deleteCardB.setVisible(false);
         checkBox.setVisible(false);
         createCard.setVisible(false);
@@ -420,6 +421,7 @@ public class IndexCardController implements Initializable {
             }
 
         }
+        courseReader.close();
         deleteCardB.setVisible(false);
         checkBox.setVisible(false);
         createCard.setVisible(false);
@@ -444,6 +446,7 @@ public class IndexCardController implements Initializable {
             Boolean checker = Boolean.parseBoolean(readTheLine[2]);
             set.addCard(readTheLine[0],readTheLine[1], checker);
         }
+        courseReader.close();
         deleteCardB.setVisible(false);
         checkBox.setVisible(false);
         createCard.setVisible(false);
