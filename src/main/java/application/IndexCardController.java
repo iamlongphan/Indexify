@@ -2,9 +2,11 @@ package application;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -58,6 +60,8 @@ public class IndexCardController implements Initializable {
 
     @FXML
     Button reviewLearnedB;
+    @FXML
+    Button deleteCardB;
 
     Set set;
 
@@ -225,8 +229,6 @@ public class IndexCardController implements Initializable {
         File currentCourseSet = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
         BufferedWriter courseSetWriter = new BufferedWriter(new FileWriter(currentCourseSet,true));
         currentCheck = card.isLearned();
-        System.out.println(CardFront + " " + CardBack);
-        System.out.println(currentCheck);
         courseSetWriter.write(CardFront+","+CardBack+","+currentCheck.toString()+",");
         courseSetWriter.write("\n");
         courseSetWriter.close();
@@ -370,7 +372,13 @@ public class IndexCardController implements Initializable {
             ex.printStackTrace();
         }
     }
-    public void reviewLearned() throws FileNotFoundException {
+
+    /**
+     * Reviews all cards that are checkmarked learned
+     * @throws IOException
+     */
+    @FXML
+    public void reviewLearned() throws IOException {
         File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
         Scanner courseReader = new Scanner(currentCourseFile);
         set = new Set(currentCourse, text, checkBox, counterBox);
@@ -384,6 +392,64 @@ public class IndexCardController implements Initializable {
             }
 
         }
+        deleteCardB.setVisible(false);
+        checkBox.setVisible(false);
+        createCard.setVisible(false);
+
+        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+        stage.setTitle("Review Learned");
+        stage.show();
+    }
+
+    /**
+     * Reviews all cards that are unchecked on the learned checkbox
+     * @throws IOException
+     */
+    @FXML
+    public void reviewUnlearned() throws IOException {
+        File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
+        Scanner courseReader = new Scanner(currentCourseFile);
+        set = new Set(currentCourse, text, checkBox, counterBox);
+        while(courseReader.hasNextLine())
+        {
+            String[] readTheLine = courseReader.nextLine().split(",");
+            Boolean checker = Boolean.parseBoolean(readTheLine[2]);
+            if(readTheLine[2].equals("false"))
+            {
+                set.addCard(readTheLine[0],readTheLine[1], checker);
+            }
+
+        }
+        deleteCardB.setVisible(false);
+        checkBox.setVisible(false);
+        createCard.setVisible(false);
+        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+        stage.setTitle("Review Not Learned");
+        stage.show();
+    }
+
+    /**
+     * Reviews all cards regardless of any parameters.
+     * @throws IOException
+     */
+    @FXML
+    public void reviewAll() throws IOException
+    {
+        File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
+        Scanner courseReader = new Scanner(currentCourseFile);
+        set = new Set(currentCourse, text, checkBox, counterBox);
+        while(courseReader.hasNextLine())
+        {
+            String[] readTheLine = courseReader.nextLine().split(",");
+            Boolean checker = Boolean.parseBoolean(readTheLine[2]);
+            set.addCard(readTheLine[0],readTheLine[1], checker);
+        }
+        deleteCardB.setVisible(false);
+        checkBox.setVisible(false);
+        createCard.setVisible(false);
+        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+        stage.setTitle("Review All");
+        stage.show();
     }
 }
 

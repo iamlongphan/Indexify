@@ -7,6 +7,7 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.event.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.HashMap;
@@ -69,7 +70,7 @@ public class CourseController {
 
     @FXML
     /**
-     * Method for the creation of courses also provides each tab with the openCOurseSet button.
+     * Method for the creation of courses also provides each tab with the openCourseSet button.
      */
     protected void CreateClick(ActionEvent event) throws IOException
     {
@@ -86,26 +87,22 @@ public class CourseController {
             counter++;
             Tab tab1 = new Tab("New Course " + counter);
             Button B = new Button();
-            B.setText(openCourseSetB.getText());
-            /**
-            B.setBackground(openCourseSetB.getBackground());
-            B.setAlignment(openCourseSetB.getAlignment());
-             **/
+            VBox vbox = new VBox();
+            vbox.setAlignment(Pos.CENTER);
+            B.setText(openCourseSetB.getText().toUpperCase());
+            B.setStyle(openCourseSetB.getStyle());
             B.setOnAction(openCourseSetB.getOnAction());
-            /**
-            B.setMinSize(openCourseSetB.getMinWidth(),openCourseSetB.getMinHeight());
-            B.setMaxSize(openCourseSetB.getMaxWidth(),openCourseSetB.getMaxHeight());
-            B.setPrefSize(openCourseSetB.getPrefWidth(),openCourseSetB.getPrefHeight());
             B.setTextAlignment(openCourseSetB.getTextAlignment());
             B.setTextFill(openCourseSetB.getTextFill());
             B.setFont(openCourseSetB.getFont());
-             **/
-            tab1.setContent(B);
+            vbox.getChildren().add(B);
+            tab1.setContent(vbox);
             tabCourses.getTabs().add(tab1);
             try {
                 buffW.write(tab1.getText() + "\n");
 
                 buffW.close();
+                currentCourseName = tabCourses.getSelectionModel().getSelectedItem().getText();
             }
             catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -129,15 +126,19 @@ public class CourseController {
             BufferedReader courseReader = new BufferedReader(new FileReader(existingFile));
             String line = null;
             while ((line = courseReader.readLine()) != null) {
-                Tab tab1 = new Tab();
-                tab1.setText(line);
+                Tab tab1 = new Tab(line);
+                VBox vbox = new VBox();
+                vbox.setAlignment(Pos.CENTER);
                 Button B = new Button();
-                B.setText("Open Course Set");
+                B.setText("OPEN COURSE SET");
                 B.setId(tab1.getText()+"Button");
+                B.setStyle(openCourseSetB.getStyle());
+                B.setTextFill(openCourseSetB.getTextFill());
+                B.setFont(openCourseSetB.getFont());
                 B.setOnAction(openCourseSetB.getOnAction());
-                tab1.setContent(B);
+                vbox.getChildren().add(B);
+                tab1.setContent(vbox);
                 tabCourses.getTabs().add(tab1);
-                System.out.println(B.getId());
             }
             courseReader.close();
         }
@@ -353,6 +354,7 @@ public class CourseController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("indexCardViewer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
+            stage.setTitle(currentCourseName+" Viewer");
             stage.setScene(new Scene(root1));
             stage.show();
         } catch(Exception e) {
