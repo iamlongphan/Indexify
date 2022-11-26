@@ -63,7 +63,10 @@ public class IndexCardController implements Initializable {
     Boolean currentCheck;
 
 
-
+    /**
+     * Main function for the edit button in the IndexCardViewer FXML file.  Allows the card to edit itself.
+     * @param e
+     */
     @FXML
     public void editButtonClicked(Event e) {
 
@@ -98,7 +101,6 @@ public class IndexCardController implements Initializable {
                 currentCheck = checkBox.isSelected();
                 try {
                     currentCourseWriter.write(termField.getText()+","+definitionField.getText()+","+currentCheck.toString()+",");
-                    System.out.println(termField.getText()+","+definitionField.getText()+","+currentCheck.toString()+",");
                     currentCourseWriter.close();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -130,6 +132,10 @@ public class IndexCardController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Method for the creation of a card.  Will open another stage in order to create a new card.
+     * @param e
+     */
     @FXML
     public void createButtonClicked(Event e){
 
@@ -186,6 +192,10 @@ public class IndexCardController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Delete function for the delete button of the index cards.
+     * @param e
+     */
     @FXML
     public void deleteButtonClicked(Event e) {
         String nameOfCard = set.getCard().getFront();
@@ -198,6 +208,10 @@ public class IndexCardController implements Initializable {
         set.flipCurrentCard();
     }
 
+    /**
+     * Is the main function for the checkboxes on each of the index cards, returns whether or not the index cards are checked as learned or unlearned.
+     * @throws IOException
+     */
     @FXML
     public void learned() throws IOException {
         IndexCard card = set.getCard();
@@ -227,9 +241,16 @@ public class IndexCardController implements Initializable {
     }
 
 
-
-
-
+    /**
+     * Initializes any existing index cards and also creates the new Set for the index cards to sit in.
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * <tt>null</tt> if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or <tt>null</tt> if
+     * the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -273,7 +294,7 @@ public class IndexCardController implements Initializable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            //While loop reading through the corresponding course file, where it will add all existing index cards. TODO
+
             if(theExistentCourse.length() != 0)
             {
                 while (ExistentCourse.hasNextLine()) {
@@ -287,7 +308,11 @@ public class IndexCardController implements Initializable {
 
 
     }
-    //NEED TO EDIT REMOVELINE FROM FILE TO CHANGE THE COURSES FILE.
+
+    /**
+     * Removes the String specified in the file inFile.
+     * @param courseToRemove
+     */
     public void removeLineFromFile(String courseToRemove) {
 
         try {
