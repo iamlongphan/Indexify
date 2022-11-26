@@ -10,9 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Comparator;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
-public class AccountController{
+public class AccountController {
 
     @FXML
     Button confirmPasswordB;
@@ -39,14 +43,14 @@ public class AccountController{
     Button logoutButton;
 
 
-
-
-
+    /**
+     * Closes the account settings page.
+     */
     @FXML
     public void cancelButton() {
         try {
             Parent root = (Parent) FXMLLoader.load(Main.class.getResource("courseViewer.fxml"));
-            Stage stage = (Stage)this.cancelB.getScene().getWindow();
+            Stage stage = (Stage) this.cancelB.getScene().getWindow();
             stage.setTitle("Course Viewer");
             stage.setScene(new Scene(root, 1024, 768));
             stage.setResizable(false);
@@ -57,22 +61,26 @@ public class AccountController{
 
     }
 
+    /**
+     * Validates whether or not an account exists
+     *
+     * @param oldpassw
+     * @return Returns true if the password matches the one in the User database.
+     * @throws FileNotFoundException
+     */
     public boolean validatespass(String oldpassw) throws FileNotFoundException {
         File database = new File("users.TXT");
         File readUsername = new File("currentUser.txt");
         Scanner readDatabase = new Scanner(database);
         Scanner readUser = new Scanner(readUsername);
         String currentUserName = readUser.nextLine();
-        while(readDatabase.hasNextLine())
-        {
+        while (readDatabase.hasNextLine()) {
             String currentLine = readDatabase.nextLine();
             String[] details = currentLine.split(",");
             String usernameOfAccount = details[0];
             String realOldPass = details[1];
-            if(currentUserName.contains(usernameOfAccount))
-            {
-                if (realOldPass.equals(oldpassw))
-                {
+            if (currentUserName.contains(usernameOfAccount)) {
+                if (realOldPass.equals(oldpassw)) {
                     currentQans = details[2];
                     readDatabase.close();
                     return true;
@@ -86,6 +94,11 @@ public class AccountController{
 
     }
 
+    /**
+     * Is the main function for the change of the password.  Changes the password in the file.
+     *
+     * @throws IOException
+     */
 
     public void changePass() throws IOException {
         //read from file the new pass
@@ -100,10 +113,10 @@ public class AccountController{
         String usernameOfCurrent = currentUserReader.nextLine();
         currentUserReader.close();
 
-        if(validatespass(oldPassword)){
+        if (validatespass(oldPassword)) {
             removeLineFromFile(usernameOfCurrent);
 
-            BufferedWriter passwordRewriter = new BufferedWriter(new FileWriter(usersFile,true));
+            BufferedWriter passwordRewriter = new BufferedWriter(new FileWriter(usersFile, true));
             Scanner passwordReader = new Scanner(usersFile);
 
             passwordRewriter.write(usernameOfCurrent + ",");
@@ -116,17 +129,19 @@ public class AccountController{
 
 
             System.out.println("Change password");
-        }
-        else{
+        } else {
             errorMessageLabel.setText("Invalid Please try again!");
             System.out.println("Password is not Correct");
         }
 
 
-
     }
 
-    //works
+    /**
+     * Is the main function for the button that changes the security answer for the account.
+     *
+     * @throws IOException
+     */
     public void changeSecurityAnswer() throws IOException {
         File currentUserFile = new File("currentUser.TXT");
         File usersFile = new File("users.TXT");
@@ -137,11 +152,9 @@ public class AccountController{
 
         String passwordTosave = "";
         Scanner savePasswordHere = new Scanner(usersFile);
-        while(savePasswordHere.hasNextLine())
-        {
+        while (savePasswordHere.hasNextLine()) {
             String[] details = savePasswordHere.nextLine().split(",");
-            if(details[0].equals(usernameOfCurrent))
-            {
+            if (details[0].equals(usernameOfCurrent)) {
                 passwordTosave = details[1];
                 System.out.println(passwordTosave);
             }
@@ -150,11 +163,10 @@ public class AccountController{
         removeLineFromFile(usernameOfCurrent);
 
         String newAnswer = cityname.getText();
-        if (cityname.getText().isEmpty()){
+        if (cityname.getText().isEmpty()) {
             cityErrorMessageLabel.setText("Invalid Please Fill City Name");
-        }
-        else{
-            BufferedWriter qAnsRewriter = new BufferedWriter(new FileWriter(usersFile,true));
+        } else {
+            BufferedWriter qAnsRewriter = new BufferedWriter(new FileWriter(usersFile, true));
             qAnsRewriter.write(usernameOfCurrent + ",");
             qAnsRewriter.write(passwordTosave + ",");
             qAnsRewriter.write(newAnswer + ",");
@@ -164,12 +176,13 @@ public class AccountController{
         }
 
 
-
-
-
     }
 
-    //Works
+    /**
+     * Removes information saved to the database about an account.
+     *
+     * @param courseToRemove
+     */
     public void removeLineFromFile(String courseToRemove) {
 
         try {
@@ -216,32 +229,37 @@ public class AccountController{
             tempFile.renameTo(inFile);
 
 
-        }
-        catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
 
-    //Works
-    public void deleteAccount() throws FileNotFoundException {
+    /**
+     * The function for the deletion of an account. Removes all existence of an account.
+     *
+     * @throws FileNotFoundException
+     */
+    public void deleteAccount() throws IOException {
 
         File current = new File("currentUser.txt");
         Scanner readUser = new Scanner(current);
         String currentUserLogged = readUser.next();
-        File checkIfFileExists = new File(currentUserLogged+".txt");
-        if(checkIfFileExists.exists())
-        {
+        File checkIfFileExists = new File(currentUserLogged + ".txt");
+        File deleteDirectory2 = new File("userData/" + currentUserLogged);
+
+        if (deleteDirectory2.exists()) {
+            deleteDirectory(deleteDirectory2);
+        }
+        if (checkIfFileExists.exists()) {
             checkIfFileExists.delete();
         }
         removeLineFromFile(currentUserLogged);
 
         Parent root;
-        try
-        {
+        try {
             File file1 = new File("currentUser.txt");
 
             BufferedWriter buff1 = new BufferedWriter(new FileWriter(file1));
@@ -250,16 +268,36 @@ public class AccountController{
             root = FXMLLoader.load(Main.class.getResource("login.fxml"));
             Stage stage = (Stage) deleteAccountB.getScene().getWindow();
             stage.setTitle("Indexify");
-            stage.setScene(new Scene(root,530, 400));
+            stage.setScene(new Scene(root, 530, 400));
             stage.setResizable(false);
             stage.show();
 
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * Is a function created in order to delete the files out of the userData directory in the case that the account is deleted.
+     * @param file
+     */
+    public static void deleteDirectory(File file) {
+
+        File[] list = file.listFiles();
+        if (list != null) {
+            for (File temp : list) {
+                System.out.println("Visit " + temp);
+                deleteDirectory(temp);
+            }
+        }
+
+        if (file.delete()) {
+            System.out.printf("Delete : %s%n", file);
+        } else {
+            System.err.printf("Unable to delete file or directory : %s%n", file);
+        }
+
+
+    }
 }
