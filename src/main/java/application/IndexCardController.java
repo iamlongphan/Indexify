@@ -60,6 +60,7 @@ public class IndexCardController implements Initializable {
 
     String currentUser;
     String currentCourse;
+    Boolean currentCheck;
 
 
 
@@ -136,7 +137,9 @@ public class IndexCardController implements Initializable {
                 File courseRead = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
                 try {
                     BufferedWriter courseFileWriter = new BufferedWriter(new FileWriter(courseRead,true));
-                    courseFileWriter.write(termField.getText()+","+definitionField.getText()+","+"false");
+                    courseFileWriter.write(termField.getText()+","+definitionField.getText()+","+"false,");
+                    courseFileWriter.write("\n");
+                    courseFileWriter.close();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -168,6 +171,8 @@ public class IndexCardController implements Initializable {
 
     @FXML
     public void deleteButtonClicked(Event e) {
+        String nameOfCard = set.getCard().getFront();
+        removeLineFromFile(nameOfCard);
         set.deleteCard(set.getCard());
     }
 
@@ -177,9 +182,21 @@ public class IndexCardController implements Initializable {
     }
 
     @FXML
-    public void learned(){
+    public void learned() throws IOException {
         IndexCard card = set.getCard();
         card.setLearned(checkBox.isSelected());
+        String CardFront = card.getFront();
+        String CardBack = card.getBack();
+        removeLineFromFile(CardFront);
+        File currentCourseSet = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
+        BufferedWriter courseSetWriter = new BufferedWriter(new FileWriter(currentCourseSet,true));
+        currentCheck = card.isLearned();
+        System.out.println(CardFront + " " + CardBack);
+        System.out.println(currentCheck);
+        courseSetWriter.write(CardFront+","+CardBack+","+currentCheck.toString()+",");
+        courseSetWriter.write("\n");
+        courseSetWriter.close();
+
     }
 
     @FXML
@@ -191,6 +208,9 @@ public class IndexCardController implements Initializable {
     public void previousCard(){
         set.previousCard();
     }
+
+
+
 
 
     @Override
@@ -224,28 +244,29 @@ public class IndexCardController implements Initializable {
 
         File theExistentCourse = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
 
-        //Making the Writer // is actually a reader TODO
-        BufferedWriter ExistentCourse = null;
-        try {
-            //Should become reader TODO
-            ExistentCourse = new BufferedWriter(new FileWriter(theExistentCourse));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
 
         set = new Set(currentCourse, text, checkBox, counterBox);
-        try {
-            if(theExistentCourse.exists())
-            {
-                //While loop reading through the corresponding course file, where it will add all existing index cards. TODO
-                ExistentCourse.write(currentCourse + "," + " text, checkBox, counterBox");
-                ExistentCourse.close();
+        if(theExistentCourse.exists())
+        {
+            Scanner ExistentCourse = null;
+            try {
+
+                ExistentCourse = new Scanner(theExistentCourse);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            //While loop reading through the corresponding course file, where it will add all existing index cards. TODO
+            if(theExistentCourse.length() != 0)
+            {
+                while (ExistentCourse.hasNextLine()) {
+                    String[] details = ExistentCourse.nextLine().split(",");
+                    Boolean checked = Boolean.parseBoolean(details[2]);
+                    set.addCard(details[0], details[1], checked);
+                }
+            }
+            ExistentCourse.close();
         }
-
-
 
 
     }
@@ -260,7 +281,7 @@ public class IndexCardController implements Initializable {
             readUser.close();
 
 
-            File inFile = new File("users.txt");
+            File inFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
             BufferedReader br = new BufferedReader(new FileReader(inFile));
 
             if (!inFile.isFile()) {
