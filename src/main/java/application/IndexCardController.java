@@ -20,6 +20,7 @@ import javafx.stage.Window;
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class IndexCardController implements Initializable {
     @FXML
@@ -56,6 +57,9 @@ public class IndexCardController implements Initializable {
     TextField counterBox;
 
     Set set;
+
+    String currentUser;
+    String currentCourse;
 
 
 
@@ -108,7 +112,7 @@ public class IndexCardController implements Initializable {
     }
 
     @FXML
-    public void createButtonClicked(Event e) {
+    public void createButtonClicked(Event e){
 
         Stage stage = new Stage();
         stage.setTitle("Create Card");
@@ -128,6 +132,14 @@ public class IndexCardController implements Initializable {
         submit.setOnAction((actionEvent) -> {
             if(!(termField.getText().isEmpty() || definitionField.getText().isEmpty())){
                 set.addCard(termField.getText(), definitionField.getText(), false);
+                //This is where to write data down to the file TODO TESTING PHASE
+                File courseRead = new File("userData/" + currentUser + "/" + currentUser+currentCourse+".txt");
+                try {
+                    BufferedWriter courseFileWriter = new BufferedWriter(new FileWriter(courseRead,true));
+                    courseFileWriter.write(termField.getText()+","+definitionField.getText()+","+"false");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 stage.close();
             }
         });
@@ -183,9 +195,113 @@ public class IndexCardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        set = new Set("course", text, checkBox, counterBox);
-        File setFile = new File("currentUser.txt");
 
+        File currentUserName = new File("currentUser.txt");
+        File currentCourseName = new File("currentCourseSelected.txt");
+
+
+        //Scanner creator to read currentUser (Helps with accessing the file)
+        Scanner reader = null;
+        try {
+            reader = new Scanner(currentUserName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Scanner creator for reading the current Course name.
+        Scanner readCourseName = null;
+        try{
+            readCourseName = new Scanner(currentCourseName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        // currentUser reads current username,  currentCourse reads the current course that is open.
+        currentUser = reader.nextLine();
+        currentCourse = readCourseName.nextLine();
+        reader.close();
+        readCourseName.close();
+
+        File theExistentCourse = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
+
+        //Making the Writer // is actually a reader TODO
+        BufferedWriter ExistentCourse = null;
+        try {
+            //Should become reader TODO
+            ExistentCourse = new BufferedWriter(new FileWriter(theExistentCourse));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        set = new Set(currentCourse, text, checkBox, counterBox);
+        try {
+            if(theExistentCourse.exists())
+            {
+                //While loop reading through the corresponding course file, where it will add all existing index cards. TODO
+                ExistentCourse.write(currentCourse + "," + " text, checkBox, counterBox");
+                ExistentCourse.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
+    }
+    public void removeLineFromFile(String courseToRemove) {
+
+        try {
+
+            File userReader = new File("currentUser.txt");
+            Scanner readUser = new Scanner(userReader);
+            String currentUser = readUser.nextLine();
+            readUser.close();
+
+
+            File inFile = new File("users.txt");
+            BufferedReader br = new BufferedReader(new FileReader(inFile));
+
+            if (!inFile.isFile()) {
+                System.out.println("Parameter is not an existing file");
+                return;
+            }
+
+            //Construct the new file that will later be renamed to the original filename.
+            File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+
+            //BufferedReader br = new BufferedReader(new FileReader());
+            PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+
+            String line = null;
+            //Read from the original file and write to the new
+            //unless content matches data to be removed.
+            while ((line = br.readLine()) != null) {
+
+                if (line.trim().indexOf(courseToRemove) == -1) {
+
+                    pw.println(line);
+                    pw.flush();
+                }
+
+
+            }
+            pw.close();
+            br.close();
+
+            //Delete the original file
+            inFile.delete();
+            //Rename the new file to the original file
+            tempFile.renameTo(inFile);
+
+
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 

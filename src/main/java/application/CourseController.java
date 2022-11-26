@@ -63,36 +63,43 @@ public class CourseController {
     Button accountSettings;
 
     public String currentUserName;
-
+    public String currentCourseName;
 
 
 
     @FXML
     /**
-     * Method for the creation of courses, additionaly creates the buttons that provide deleting,
-     * and renaming.  This method also gives functionality to the delete button and rename buttons.
+     * Method for the creation of courses also provides each tab with the openCOurseSet button.
      */
     protected void CreateClick(ActionEvent event) throws IOException
     {
+        File makeDirectory = new File ("userData/"+currentUserName+"/");
+        makeDirectory.mkdirs();
+        File newUserFile = new File("userData/"+currentUserName+"/"+currentUserName+".TXT");
+
         BufferedReader buffR = new BufferedReader(new FileReader("currentUser.txt"));
         String currentUserName = buffR.readLine();
 
-        BufferedWriter buffW = new BufferedWriter(new FileWriter(currentUserName+".TXT",true));
+        BufferedWriter buffW = new BufferedWriter(new FileWriter(newUserFile,true));
         if(!addButton.isPressed())   //If button gets pressed (dw about syntax of that)
         {
             counter++;
             Tab tab1 = new Tab("New Course " + counter);
             Button B = new Button();
             B.setText(openCourseSetB.getText());
+            /**
             B.setBackground(openCourseSetB.getBackground());
             B.setAlignment(openCourseSetB.getAlignment());
+             **/
             B.setOnAction(openCourseSetB.getOnAction());
+            /**
             B.setMinSize(openCourseSetB.getMinWidth(),openCourseSetB.getMinHeight());
             B.setMaxSize(openCourseSetB.getMaxWidth(),openCourseSetB.getMaxHeight());
             B.setPrefSize(openCourseSetB.getPrefWidth(),openCourseSetB.getPrefHeight());
             B.setTextAlignment(openCourseSetB.getTextAlignment());
             B.setTextFill(openCourseSetB.getTextFill());
             B.setFont(openCourseSetB.getFont());
+             **/
             tab1.setContent(B);
             tabCourses.getTabs().add(tab1);
             try {
@@ -116,23 +123,25 @@ public class CourseController {
         BufferedReader buffR = new BufferedReader(new FileReader("currentUser.txt"));
         currentUserName = buffR.readLine();
         buffR.close();
-        File existingFile = new File(currentUserName + ".txt");
+        File existingFile = new File("userData/"+currentUserName+"/"+currentUserName + ".txt");
         if(existingFile.exists())
         {
-            BufferedReader courseReader = new BufferedReader(new FileReader(currentUserName + ".txt"));
+            BufferedReader courseReader = new BufferedReader(new FileReader(existingFile));
             String line = null;
             while ((line = courseReader.readLine()) != null) {
                 Tab tab1 = new Tab();
                 tab1.setText(line);
                 Button B = new Button();
                 B.setText("Open Course Set");
+                B.setId(tab1.getText()+"Button");
                 B.setOnAction(openCourseSetB.getOnAction());
                 tab1.setContent(B);
                 tabCourses.getTabs().add(tab1);
+                System.out.println(B.getId());
             }
             courseReader.close();
         }
-        //currentUser.setText(currentUserName);
+
 
     }
 
@@ -156,13 +165,17 @@ public class CourseController {
 
     }
 
-
     @FXML
     protected void DeleteClick()
     {
         if(!delButton.isPressed())
         {
             Tab tab1 = tabCourses.getSelectionModel().getSelectedItem();
+            File deleteFile = new File ("userData/"+currentUserName+"/"+currentUserName+tab1.getText()+".txt");
+            if(deleteFile.exists())
+            {
+                deleteFile.delete();
+            }
             removeLineFromFile(tab1.getText());
             tabCourses.getTabs().remove(tab1);
         }
@@ -186,12 +199,13 @@ public class CourseController {
     {
         if(!renameConfirmB.isPressed())
         {
+            File readCoursesFile = new File("userData/" + currentUserName + "/" + currentUserName + ".txt");
 
             BufferedReader buffR = new BufferedReader(new FileReader("currentUser.txt"));
 
             String currentUserName = buffR.readLine();
 
-            Scanner courseReader = new Scanner(new File(currentUserName + ".txt"));
+            Scanner courseReader = new Scanner(readCoursesFile);
 
             StringBuffer buffer = new StringBuffer();
 
@@ -206,14 +220,23 @@ public class CourseController {
             String newName = renameText.getText();
             listOfCourses = listOfCourses.replaceFirst(oldName, newName);
 
-            FileWriter writer = new FileWriter(currentUserName+".txt");
+            FileWriter writer = new FileWriter("userData/"+currentUserName+"/"+currentUserName+".txt");
             writer.write(listOfCourses);
             writer.flush();
             writer.close();
 
+            //This is to check if the file already has a course file saved to the user Data
+            File ifFileExists = new File("userData/"+currentUserName+"/"+currentUserName+oldName+".txt");
+
             Tab tab1 = tabCourses.getSelectionModel().getSelectedItem();
             tab1.setText(renameText.getText());
 
+            //The above is important for this block because then we can rename the course file to the newly renamed course without losing data.
+            if(ifFileExists.exists())
+            {
+                File nameFileChange = new File("userData/"+currentUserName+"/" + currentUserName+tab1.getText() + ".txt");
+                ifFileExists.renameTo(nameFileChange);
+            }
             buffR.close();
             courseReader.close();
             renameConfirmB.setVisible(false);
@@ -263,10 +286,10 @@ public class CourseController {
         try {
 
             BufferedReader buffR = new BufferedReader(new FileReader("currentUser.txt"));
-            String currentUserName = buffR.readLine();
+            currentUserName = buffR.readLine();
 
 
-            File inFile = new File(currentUserName +".txt");
+            File inFile = new File("userData/"+currentUserName+"/"+currentUserName +".txt");
             BufferedReader br = new BufferedReader(new FileReader(inFile));
 
             if (!inFile.isFile()) {
@@ -315,6 +338,20 @@ public class CourseController {
     @FXML
     public void openCourseSet(ActionEvent event) throws Exception {
         try {
+            //TestCode
+            String fileName = "userData/"+currentUserName+"/"+currentUserName+tabCourses.getSelectionModel().getSelectedItem().getText()+".txt";
+            String courseFileName = tabCourses.getSelectionModel().getSelectedItem().getText();
+
+            File opencurrentCourse = new File(fileName);
+            File currentCourse = new File("currentCourseSelected.txt");
+
+            FileWriter courseWriter = new FileWriter(currentCourse);
+            courseWriter.write(courseFileName);
+            courseWriter.close();
+
+            FileWriter abbada = new FileWriter(opencurrentCourse);
+            abbada.close();
+            //TestCode
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("indexCardViewer.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();

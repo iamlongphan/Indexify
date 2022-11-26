@@ -31,6 +31,10 @@ public class Set {
         this.checkBox = checkBox;
     }
 
+    public ArrayList<IndexCard> getSetList()
+    {
+        return set;
+    }
     public int size(){return set.size();}
 
     public String getCourse(){
