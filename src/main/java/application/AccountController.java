@@ -252,6 +252,7 @@ public class AccountController {
 
         if (deleteDirectory2.exists()) {
             deleteDirectory(deleteDirectory2);
+            deleteDirectory2.delete();
         }
         if (checkIfFileExists.exists()) {
             checkIfFileExists.delete();
@@ -288,6 +289,7 @@ public class AccountController {
         if (list != null) {
             for (File temp : list) {
                 System.out.println("Visit " + temp);
+                temp.delete();
                 deleteDirectory(temp);
             }
         }
