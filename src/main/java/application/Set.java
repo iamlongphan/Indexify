@@ -23,7 +23,7 @@ public class Set {
 
     public Set(String course, Label text, CheckBox checkBox, TextField counterBox){
         set = new ArrayList<>();
-        //set.add(new IndexCard("EDIT THIS CARD", "Definition", false));
+        set.add(new IndexCard("EDIT THIS CARD", "Definition", false));
         this.course = course;
         index = 0;
         this.text = text;
