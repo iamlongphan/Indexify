@@ -179,7 +179,7 @@ public class AccountController {
     }
 
     /**
-     * Removes information saved to the database about an account.
+     * Removes information saved to the database about an account. Removes any line from the flat file database.
      *
      * @param courseToRemove
      */
@@ -239,6 +239,7 @@ public class AccountController {
 
     /**
      * The function for the deletion of an account. Removes all existence of an account.
+     *
      *
      * @throws FileNotFoundException
      */
