@@ -7,7 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="indexify" />
-        <module name="indexifyversion0.9.1-LongBranch" />
+        <module name="indexifyFinalVer" />
       </profile>
     </annotationProcessing>
   </component>

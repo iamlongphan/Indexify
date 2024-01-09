@@ -364,26 +364,30 @@ public class IndexCardController implements Initializable {
     @FXML
     public void reviewLearned() throws IOException {
         File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
-        Scanner courseReader = new Scanner(currentCourseFile);
-        set = new Set(currentCourse, text, checkBox, counterBox);
-        while(courseReader.hasNextLine())
-        {
-            String[] readTheLine = courseReader.nextLine().split(",");
-            boolean checker = Boolean.parseBoolean(readTheLine[2]);
-            if(readTheLine[2].equals("true"))
-            {
-                set.addCard(readTheLine[0],readTheLine[1], checker);
+        if(currentCourseFile.exists()) {
+            Scanner courseReader = new Scanner(currentCourseFile);
+
+            set = new Set(currentCourse, text, checkBox, counterBox);
+            while (courseReader.hasNextLine()) {
+                String[] readTheLine = courseReader.nextLine().split(",");
+                boolean checker = Boolean.parseBoolean(readTheLine[2]);
+                if (readTheLine[2].equals("true")) {
+                    set.addCard(readTheLine[0], readTheLine[1], checker);
+                }
+
             }
+            courseReader.close();
+            //deleteCardB.setVisible(false);
+            checkBox.setVisible(false);
+            createCard.setVisible(false);
 
+            Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+            stage.setTitle("Review Learned");
+            stage.show();
         }
-        courseReader.close();
-        //deleteCardB.setVisible(false);
-        checkBox.setVisible(false);
-        createCard.setVisible(false);
-
-        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
-        stage.setTitle("Review Learned");
-        stage.show();
+        else {
+            System.out.println("No such file exists");
+        }
     }
 
     /**
@@ -393,25 +397,27 @@ public class IndexCardController implements Initializable {
     @FXML
     public void reviewUnlearned() throws IOException {
         File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
-        Scanner courseReader = new Scanner(currentCourseFile);
-        set = new Set(currentCourse, text, checkBox, counterBox);
-        while(courseReader.hasNextLine())
-        {
-            String[] readTheLine = courseReader.nextLine().split(",");
-            Boolean checker = Boolean.parseBoolean(readTheLine[2]);
-            if(readTheLine[2].equals("false"))
-            {
-                set.addCard(readTheLine[0],readTheLine[1], checker);
+        if(currentCourseFile.exists()) {
+            Scanner courseReader = new Scanner(currentCourseFile);
+            set = new Set(currentCourse, text, checkBox, counterBox);
+            while (courseReader.hasNextLine()) {
+                String[] readTheLine = courseReader.nextLine().split(",");
+                Boolean checker = Boolean.parseBoolean(readTheLine[2]);
+                if (readTheLine[2].equals("false")) {
+                    set.addCard(readTheLine[0], readTheLine[1], checker);
+                }
             }
-
+            courseReader.close();
+            //deleteCardB.setVisible(false);
+            checkBox.setVisible(false);
+            createCard.setVisible(false);
+            Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+            stage.setTitle("Review Not Learned");
+            stage.show();
         }
-        courseReader.close();
-        //deleteCardB.setVisible(false);
-        checkBox.setVisible(false);
-        createCard.setVisible(false);
-        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
-        stage.setTitle("Review Not Learned");
-        stage.show();
+        else {
+            System.out.println("No such file exists");
+        }
     }
 
     /**
@@ -421,22 +427,27 @@ public class IndexCardController implements Initializable {
     @FXML
     public void reviewAll() throws IOException
     {
-        File currentCourseFile = new File("userData/"+currentUser+"/"+currentUser+currentCourse+".txt");
-        Scanner courseReader = new Scanner(currentCourseFile);
-        set = new Set(currentCourse, text, checkBox, counterBox);
-        while(courseReader.hasNextLine())
+        File currentCourseFile = new File("userData/" + currentUser + "/" + currentUser + currentCourse + ".txt");
+        if(currentCourseFile.exists())
         {
-            String[] readTheLine = courseReader.nextLine().split(",");
-            Boolean checker = Boolean.parseBoolean(readTheLine[2]);
-            set.addCard(readTheLine[0],readTheLine[1], checker);
+            Scanner courseReader = new Scanner(currentCourseFile);
+            set = new Set(currentCourse, text, checkBox, counterBox);
+            while (courseReader.hasNextLine()) {
+                String[] readTheLine = courseReader.nextLine().split(",");
+                Boolean checker = Boolean.parseBoolean(readTheLine[2]);
+                set.addCard(readTheLine[0], readTheLine[1], checker);
+            }
+            courseReader.close();
+            //deleteCardB.setVisible(false);
+            checkBox.setVisible(false);
+            createCard.setVisible(false);
+            Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
+            stage.setTitle("Review All");
+            stage.show();
         }
-        courseReader.close();
-        //deleteCardB.setVisible(false);
-        checkBox.setVisible(false);
-        createCard.setVisible(false);
-        Stage stage = (Stage) reviewLearnedB.getScene().getWindow();
-        stage.setTitle("Review All");
-        stage.show();
+        else {
+            System.out.println("No such file exists");
+        }
     }
 }
 
